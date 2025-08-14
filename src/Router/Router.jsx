@@ -7,6 +7,7 @@ import OurCar from '../pages/OurCar/OurCar';
 import About from '../pages/About/About';
 import OurBlog from '../pages/OurBlog/OurBlog';
 import Contact from '../pages/Contact/Contact';
+import AddCarForm from '../pages/AddCarForm/AddCarForm';
 
 export const Router = createBrowserRouter([
    {
@@ -36,6 +37,10 @@ export const Router = createBrowserRouter([
        {
         path: "contact",
         element: <Contact />
+      },
+      {
+        path: "add-car",
+        element: <AddCarForm />
       }
 
     ]
