@@ -10,14 +10,28 @@ import Blogs from './Blogs/Blogs'
 
 function Home() {
   return (
-    <div className='max-w-7xl mx-auto'>
-      <Banner />
-      <CarRentalSearch />
-      <Counter />
-      <BrandImage />
-      <Services />
-      <RentalCars />
-      <Blogs />
+    <div>
+      <div className='max-w-7xl mx-auto'>
+        <Banner />
+      </div>
+      <div className='max-w-7xl mx-auto'>
+        <CarRentalSearch />
+      </div>
+      <div>
+        <Counter />
+      </div>
+      <div className='max-w-7xl mx-auto'>
+        <BrandImage />
+      </div>
+     <div className='max-w-7xl mx-auto'>
+       <Services />
+     </div>
+     <div>
+       <RentalCars />
+     </div>
+      <div>
+        <Blogs />
+      </div>
     </div>
   )
 }

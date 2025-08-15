@@ -18,7 +18,8 @@ export default function RentalCars() {
   return (
     <section className="relative bg-[#0b2a5f] py-16 overflow-hidden mt-12">
       {/* Center glow + side shadow (optional, remove if not needed) */}
-      <div className="pointer-events-none absolute inset-0">
+      <div className="max-w-7xl mx-auto">
+        <div className="pointer-events-none absolute inset-0">
         <div
           className="absolute inset-0"
           style={{
@@ -99,6 +100,7 @@ export default function RentalCars() {
           <path d="M0 0 C 480 55, 1440 55, 1920 0 L1920 0 L0 0 Z" fill="#c0c7d6" />
           <path d="M0 0 C 480 40, 1440 40, 1920 0 L1920 0 L0 0 Z" fill="#aab1c2" />
         </svg>
+      </div>
       </div>
     </section>
   );

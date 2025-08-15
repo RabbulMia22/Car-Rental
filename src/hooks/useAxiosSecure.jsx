@@ -3,7 +3,7 @@ import axios from 'axios';
 
 function useAxiosSecure() {
   const axiosSecure = axios.create({
-  baseURL: `http://localhost:5000`,
+  baseURL: `http://localhost:3000`,
 });
   return axiosSecure;
 }

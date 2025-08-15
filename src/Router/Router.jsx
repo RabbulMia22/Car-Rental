@@ -8,6 +8,8 @@ import About from '../pages/About/About';
 import OurBlog from '../pages/OurBlog/OurBlog';
 import Contact from '../pages/Contact/Contact';
 import AddCarForm from '../pages/AddCarForm/AddCarForm';
+import CarDetails from '../components/CarDetails/CarDetails';
+import ReserveCar from '../components/ReserveCar/ReserveCar';
 
 export const Router = createBrowserRouter([
    {
@@ -41,7 +43,15 @@ export const Router = createBrowserRouter([
       {
         path: "add-car",
         element: <AddCarForm />
-      }
+      },
+      {
+        path: "car/:id",
+        element: <CarDetails />
+      },
+      {
+        path: "reserve/:id",
+        element: <ReserveCar />
+      },
 
     ]
    }
