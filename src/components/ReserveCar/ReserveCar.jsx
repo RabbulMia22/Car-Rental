@@ -11,13 +11,15 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useParams } from "react-router-dom";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { MdMarkEmailRead } from "react-icons/md";
+import Swal from "sweetalert2";
 
 export default function ReserveCar() {
   const { register, handleSubmit, control, reset } = useForm();
   const [submitted, setSubmitted] = useState(false);
-   const { id } = useParams();
+  const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const [value, setValue] = useState("");
+  
 
   const { data: car, isLoading, isError, error } = useQuery({
     queryKey: ["car", id],
@@ -39,7 +41,7 @@ export default function ReserveCar() {
       <div className="max-w-md mx-auto mt-10 p-6 bg-red-50 border-l-4 border-red-600 text-red-800 rounded-lg shadow-md">
         <h2 className="font-bold text-xl mb-2">Oops! Something went wrong</h2>
         <p className="mb-4">{error.message}</p>
-        <button 
+        <button
           onClick={() => window.location.reload()}
           className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
         >
@@ -48,10 +50,43 @@ export default function ReserveCar() {
       </div>
     );
 
-  const onSubmit = (data) => {
-    console.log(data);
-    setSubmitted(true);
-    reset();
+  const onSubmit = async (data) => {
+    try {
+      // Merge start date and time
+      const startDateTime = new Date(data.startDate);
+      const [startHours, startMinutes] = data.startTime.split(":");
+      startDateTime.setHours(startHours);
+      startDateTime.setMinutes(startMinutes);
+      
+
+      const payload = {
+        name: data.name,
+        email: data.email,
+        pickupLocation: data.pickupLocation,
+        dropoffLocation: data.dropoffLocation,
+        startDate: startDateTime,
+        isPending: true,
+        car: car._id,
+      };
+
+      await axiosSecure.post("/reserve", payload);
+      Swal.fire({
+        title: "Success!",
+        text: "Car reserved successfully!",
+        icon: "success",
+        confirmButtonText: "OK"
+      });
+      setSubmitted(true);
+      reset();
+    } catch (error) {
+      console.error("Reservation failed:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.message || "Error reserving car",
+        confirmButtonColor: "#d33",
+      });
+    }
   };
 
   return (
@@ -89,7 +124,7 @@ export default function ReserveCar() {
               </label>
               <input
                 type="text"
-                {...register("pickupLocation", { required: true })}
+                {...register("name", { required: true })}
                 placeholder="Enter your name"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -136,7 +171,7 @@ export default function ReserveCar() {
               {/* Start Date */}
               <div>
                 <label className="block text-gray-700 font-semibold mb-1">
-                  <FaCalendarAlt className="inline mr-1" /> Start Date
+                  <FaCalendarAlt className="inline mr-1" /> Pickup Date
                 </label>
                 <Controller
                   control={control}
@@ -158,7 +193,7 @@ export default function ReserveCar() {
               {/* Start Time */}
               <div>
                 <label className="block text-gray-700 font-semibold mb-1">
-                  <FaClock className="inline mr-1" /> Start Time
+                  <FaClock className="inline mr-1" /> Pickup Time
                 </label>
                 <input
                   type="time"
@@ -166,40 +201,7 @@ export default function ReserveCar() {
                   className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-
-              {/* End Date */}
-              <div>
-                <label className="block text-gray-700 font-semibold mb-1">
-                  <FaCalendarAlt className="inline mr-1" /> End Date
-                </label>
-                <Controller
-                  control={control}
-                  name="endDate"
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <DatePicker
-                      {...field}
-                      selected={field.value}
-                      onChange={(date) => field.onChange(date)}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      dateFormat="MMMM d, yyyy"
-                      placeholderText="Select end date"
-                    />
-                  )}
-                />
-              </div>
-
-              {/* End Time */}
-              <div>
-                <label className="block text-gray-700 font-semibold mb-1">
-                  <FaClock className="inline mr-1" /> End Time
-                </label>
-                <input
-                  type="time"
-                  {...register("endTime", { required: true })}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+             
             </div>
 
             {/* Submit Button */}
