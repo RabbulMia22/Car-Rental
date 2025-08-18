@@ -10,6 +10,9 @@ import Contact from '../pages/Contact/Contact';
 import AddCarForm from '../pages/AddCarForm/AddCarForm';
 import CarDetails from '../components/CarDetails/CarDetails';
 import ReserveCar from '../components/ReserveCar/ReserveCar';
+import AhuthenticationLayout from '../layout/AhuthenticationLayout';
+import Login from '../pages/authentication/Login';
+import Register from '../pages/authentication/Register';
 
 export const Router = createBrowserRouter([
    {
@@ -29,18 +32,6 @@ export const Router = createBrowserRouter([
         element: <OurCar />
       },
       {
-        path: "aboutus",
-        element: <About />
-      },
-      {
-        path: "blogs",
-        element: <OurBlog />
-      },
-       {
-        path: "contact",
-        element: <Contact />
-      },
-      {
         path: "add-car",
         element: <AddCarForm />
       },
@@ -53,6 +44,19 @@ export const Router = createBrowserRouter([
         element: <ReserveCar />
       },
 
+    ]
+   },
+   {
+    element:<AhuthenticationLayout />,
+    children: [
+      {
+        path: "login",
+        element: <Login />
+      },
+      {
+        path: "register",
+        element: <Register />
+      }
     ]
    }
 ])

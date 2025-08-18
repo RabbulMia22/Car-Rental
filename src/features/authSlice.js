@@ -1,17 +1,27 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,  
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    GoogleAuthProvider,
+    signInWithPopup,
 } from "firebase/auth";
 import { auth } from "../config/firebase.config";
 
+
+
 export const singupUser = createAsyncThunk(
     "auth/login",
-    async({email, password}, {rejectWithValue}) => {
+    async ({ email, password }, { rejectWithValue }) => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            return userCredential.user;
+            const user = userCredential.user;
+            return {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+            };
         } catch (error) {
             return rejectWithValue(error.message);
         }
@@ -20,10 +30,17 @@ export const singupUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
     "auth/loginUser",
-    async({email, password}, {rejectWithValue}) => {
+    async ({ email, password }, { rejectWithValue }) => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            return userCredential.user;
+            const user = userCredential.user;
+            return {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+            };
+
         } catch (error) {
             return rejectWithValue(error.message);
         }
@@ -32,9 +49,28 @@ export const loginUser = createAsyncThunk(
 
 export const logOutUser = createAsyncThunk(
     "auth/logOutUser",
-    async(_, {rejectWithValue}) => {
+    async (_, { rejectWithValue }) => {
         try {
             await signOut(auth);
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+const provider = new GoogleAuthProvider();
+
+export const googleLogin = createAsyncThunk(
+    "auth/googleLogin",
+    async (_, { rejectWithValue }) => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            return {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+            };
         } catch (error) {
             return rejectWithValue(error.message);
         }
@@ -53,6 +89,10 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = null;
         },
+        setUser: (state, action) => {
+            state.user = action.payload;
+        },
+
     },
     extraReducers: (builder) => {
         builder
@@ -88,9 +128,21 @@ const authSlice = createSlice({
             .addCase(logOutUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            .addCase(googleLogin.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(googleLogin.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload;
+            })
+            .addCase(googleLogin.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
+
     },
 });
 
-export const { resetAuthState } = authSlice.actions;
+export const { resetAuthState, setUser } = authSlice.actions;
 export default authSlice.reducer;
