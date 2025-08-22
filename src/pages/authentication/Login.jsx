@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../features/authSlice";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SocialLogin from "../../components/socialLogin/SocialLogin";
+import useUserAuth from "../../hooks/useUserLogin";
+import Swal from "sweetalert2";
 
 
 export default function Login() {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { user, loading, error } = useSelector((state) => state.auth);
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  const from = location.state?.from?.pathname || "/"; // redirect path after login
+  useUserAuth();
+
+  
   const {
     register,
     handleSubmit,
@@ -17,19 +25,41 @@ export default function Login() {
   } = useForm();
 
   const onSubmit = (data) => {
-    dispatch(loginUser({ email: data.email, password: data.password }));
+    try {
+      dispatch(loginUser({ email: data.email, password: data.password }));
+
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  // ✅ Watch for login success and error
+  useEffect(() => {
+    if (user) {
+      Swal.fire({
+        icon: "success",
+        title: "Welcome Back!",
+        text: "You have logged in successfully 🎉",
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(() => {
+        navigate(from, { replace: true });
+      });
+    }
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error,
+      });
+    }
+  }, [user, error, navigate, from]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
-        
-
         {/* Heading */}
         <h2 className="text-2xl font-bold text-center mb-6">Login to Your Account</h2>
-
-        {/* Error Message */}
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -72,9 +102,10 @@ export default function Login() {
             Sign up
           </Link>
         </p>
-        <p>
-            <SocialLogin />
-        </p>
+
+        <div className="mt-4">
+          <SocialLogin />
+        </div>
       </div>
     </div>
   );

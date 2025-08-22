@@ -13,6 +13,12 @@ import ReserveCar from '../components/ReserveCar/ReserveCar';
 import AhuthenticationLayout from '../layout/AhuthenticationLayout';
 import Login from '../pages/authentication/Login';
 import Register from '../pages/authentication/Register';
+import PrivateRoutes from '../privateRoutes/PrivateRoutes';
+import DasshboardLayout from '../layout/DashboardLayout';
+import BookedCar from '../pages/BookedCar/BookedCar';
+import BookingCar from '../pages/AdminDashBoard/BookingCar';
+import DashBoardHome from '../pages/AdminDashBoard/DashBoardHome';
+import AllCar from '../pages/AdminDashBoard/AllCar';
 
 export const Router = createBrowserRouter([
    {
@@ -31,18 +37,19 @@ export const Router = createBrowserRouter([
         path: "our-cars",
         element: <OurCar />
       },
-      {
-        path: "add-car",
-        element: <AddCarForm />
-      },
+     
       {
         path: "car/:id",
         element: <CarDetails />
       },
       {
         path: "reserve/:id",
-        element: <ReserveCar />
+        element: <PrivateRoutes><ReserveCar /></PrivateRoutes>
       },
+      {
+        path: "booked",
+        element: <PrivateRoutes><BookedCar /></PrivateRoutes>
+      }
 
     ]
    },
@@ -57,6 +64,29 @@ export const Router = createBrowserRouter([
         path: "register",
         element: <Register />
       }
+    ]
+   },
+   {
+    path: "dashboard",
+    element: <DasshboardLayout />,
+    children: [
+      {
+        index: true,
+        element: <DashBoardHome />
+      },
+
+      {
+        path: "bookings",
+        element: <BookingCar />
+      },
+      {
+        path: "add-car",
+        element: <AddCarForm />
+      },
+      {
+        path: "all-cars",
+        element: <AllCar />
+      },
     ]
    }
 ])

@@ -3,11 +3,21 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { singupUser } from "../../features/authSlice"; 
 import useUserAuth from "../../hooks/useUserLogin";
+import {  useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 export default function Register() {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error, user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const axiosSecure = useAxiosSecure();
+  
+  const from = location.state?.from?.pathname || "/"; 
+
   useUserAuth();
   const {
     register,
@@ -15,17 +25,46 @@ export default function Register() {
     formState: { errors },
   } = useForm();
 
-const onSubmit = (data) => {
-  const resultAction = dispatch(
-    singupUser({ email: data.email, password: data.password })
-  );
+const onSubmit = async (data) => {
+  try {
+   
+    const response = await axiosSecure.post("/users", {
+      email: data.email,
+      displayName: data.name, 
+      role: "user", 
+    });
 
-  if (singupUser.fulfilled.match(resultAction)) {
-    console.log("User signed up:", resultAction.payload);
-  } else {
-    console.log("Signup failed:", resultAction.payload);
+    console.log("User created/updated:", response.data);
+
+    dispatch(singupUser({ email: data.email, password: data.password }));
+
+    navigate(from, { replace: true });
+
+  } catch (error) {
+    console.error("Signup failed:", error.response?.data || error.message);
   }
 };
+
+useEffect(() => {
+    if (user) {
+      Swal.fire({
+        icon: "success",
+        title: "Welcome Back!",
+        text: "You have logged in successfully 🎉",
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(() => {
+        navigate(from, { replace: true });
+      });
+    }
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error,
+      });
+    }
+  }, [user, error, navigate, from]);
   
 
   return (

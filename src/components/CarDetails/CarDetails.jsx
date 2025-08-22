@@ -167,10 +167,11 @@ export default function CarDetails() {
                   <Link to={`/reserve/${car._id}`}>
                     <button
                     disabled={car.isRented}
-                    onClick={() => {
-                      if (car.isRented) return
-                    }}
-                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all hover:shadow-xl flex items-center justify-center gap-2">
+                   className={`flex items-center gap-2 font-bold py-2 px-5 rounded-lg shadow-md transition-all duration-300 ${
+                      car.isRented 
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                        : 'bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white'
+                    }`}>
                       <FaCarSide /> Reserve Now
                     </button>
                   </Link>

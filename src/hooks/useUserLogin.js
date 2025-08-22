@@ -1,32 +1,35 @@
-// hooks/useUserAuth.js
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebase.config";
 import { setUser } from "../features/authSlice";
 
 const useUserAuth = () => {
+  const [currentUser, setCurrentUser] = useState(undefined);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log("User is logged in:", user); // 🔥 check console here
-        dispatch(
-          setUser({
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-          })
-        );
+        const formattedUser = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        };
+        dispatch(setUser(formattedUser));
+        setCurrentUser(formattedUser);
       } else {
-        console.log("User is not logged in");
         dispatch(setUser(null));
+        setCurrentUser(null);
       }
     });
 
     return () => unsubscribe();
   }, [dispatch]);
+
+  return currentUser; 
 };
 
 export default useUserAuth;

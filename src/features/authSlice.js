@@ -124,6 +124,7 @@ const authSlice = createSlice({
             .addCase(logOutUser.fulfilled, (state) => {
                 state.loading = false;
                 state.user = null;
+                 localStorage.removeItem("user");
             })
             .addCase(logOutUser.rejected, (state, action) => {
                 state.loading = false;
