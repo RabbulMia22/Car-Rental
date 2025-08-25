@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
-import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaPhone  } from "react-icons/fa";
+import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useParams } from "react-router-dom";
@@ -19,7 +19,7 @@ export default function ReserveCar() {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const [value, setValue] = useState("");
-  
+
 
   const { data: car, isLoading, isError, error } = useQuery({
     queryKey: ["car", id],
@@ -57,7 +57,7 @@ export default function ReserveCar() {
       const [startHours, startMinutes] = data.startTime.split(":");
       startDateTime.setHours(startHours);
       startDateTime.setMinutes(startMinutes);
-      
+
 
       const payload = {
         name: data.name,
@@ -68,6 +68,10 @@ export default function ReserveCar() {
         isPending: true,
         brand: car.name,
         car: car._id,
+        reservedCarLocation: {
+          lat: car.pickupLocation.coordinates.lat,
+          lng: car.dropoffLocation.coordinates.lng
+        }
       };
 
       await axiosSecure.post("/reserve", payload);
@@ -107,7 +111,7 @@ export default function ReserveCar() {
           />
           <div className="p-6">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              {car.name }
+              {car.name}
             </h2>
             <p className="text-gray-600 mb-4">
               Luxury sedan, automatic transmission, 5 seats, Petrol.
@@ -141,7 +145,7 @@ export default function ReserveCar() {
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-             
+
             {/* Pickup Location */}
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
@@ -203,7 +207,7 @@ export default function ReserveCar() {
                   className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-             
+
             </div>
 
             {/* Submit Button */}

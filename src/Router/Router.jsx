@@ -19,6 +19,7 @@ import BookedCar from '../pages/BookedCar/BookedCar';
 import BookingCar from '../pages/AdminDashBoard/BookingCar';
 import DashBoardHome from '../pages/AdminDashBoard/DashBoardHome';
 import AllCar from '../pages/AdminDashBoard/AllCar';
+import UserCarMap from '../pages/UserCarMap/UserCarMap';
 
 export const Router = createBrowserRouter([
    {
@@ -49,8 +50,8 @@ export const Router = createBrowserRouter([
       {
         path: "booked",
         element: <PrivateRoutes><BookedCar /></PrivateRoutes>
-      }
-
+      },
+     
     ]
    },
    {

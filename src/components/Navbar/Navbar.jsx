@@ -119,6 +119,7 @@ const Navbar = () => {
 
             {/* Role-specific links */}
             {renderRoleLink()}
+             
 
             {/* Auth Links */}
             {user ? (
@@ -162,7 +163,7 @@ const Navbar = () => {
                 </li>
               </>
             )}
-
+           
             <li className="flex items-center ml-4">
              
             </li>
