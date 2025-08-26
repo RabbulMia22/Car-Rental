@@ -44,6 +44,13 @@ function DashboardLayout() {
           >
             <FaHome className="text-lg" /> <span>Home</span>
           </Link>
+           <Link
+            to="/dashboard/profile"
+            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <FaHome className="text-lg" /> <span>My Profile</span>
+          </Link>
           <Link
             to="/dashboard/bookings"
             className="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-700 transition-colors duration-200"

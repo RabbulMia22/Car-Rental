@@ -20,6 +20,7 @@ import BookingCar from '../pages/AdminDashBoard/BookingCar';
 import DashBoardHome from '../pages/AdminDashBoard/DashBoardHome';
 import AllCar from '../pages/AdminDashBoard/AllCar';
 import UserCarMap from '../pages/UserCarMap/UserCarMap';
+import MyProfile from '../pages/AdminDashBoard/MyProfile';
 
 export const Router = createBrowserRouter([
    {
@@ -87,6 +88,10 @@ export const Router = createBrowserRouter([
       {
         path: "all-cars",
         element: <AllCar />
+      },
+      {
+        path: "profile",
+        element: <MyProfile />
       },
     ]
    }
