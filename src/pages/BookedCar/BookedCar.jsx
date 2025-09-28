@@ -27,7 +27,7 @@ L.Icon.Default.mergeOptions({
 });
 
 // Socket.IO client
-const socket = io("http://localhost:3000"); 
+const socket = io("https://car-rental-server-seven-lovat.vercel.app"); 
 
 // Recenter map helper
 const RecenterMap = ({ lat, lng }) => {

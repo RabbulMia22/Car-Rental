@@ -3,7 +3,7 @@ import axios from 'axios';
 
 function useAxiosSecure() {
   const axiosSecure = axios.create({
-  baseURL: `http://localhost:3000`,
+  baseURL: `https://car-rental-server-seven-lovat.vercel.app`,
 });
   return axiosSecure;
 }
